@@ -1,0 +1,33 @@
+.footer {
+  padding: 40px;
+  background-color: #20232a;
+  color: #fff;
+  text-align: center;
+}
+
+.newsletter input {
+  padding: 10px;
+  margin-top: 10px;
+  width: 200px;
+  border: none;
+  border-radius: 4px;
+}
+
+.newsletter button {
+  padding: 10px 20px;
+  margin-left: 10px;
+  background-color: #61dafb;
+  border: none;
+  border-radius: 4px;
+  color: #20232a;
+  cursor: pointer;
+}
+
+.social-links {
+  margin-top: 20px;
+}
+
+.additional-info {
+  margin-top: 40px;
+  font-size: 14px;
+}

@@ -1,0 +1,21 @@
+.blog-previews {
+  padding: 40px;
+  background-color: #282c34;
+  color: #fff;
+}
+
+h2 {
+  color: #61dafb;
+}
+
+.posts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.posts-grid > div {
+  background-color: #20232a;
+  padding: 20px;
+  border-radius: 8px;
+}
