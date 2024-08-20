@@ -1,9 +1,14 @@
 .header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 40px;
-  background-color: #282c34;
+  background-color: #1e293b;
+}
+
+.header-content {
+    max-width: 85%;  
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 40px;
+    margin: 0 auto;     
 }
 
 .logo h1 {

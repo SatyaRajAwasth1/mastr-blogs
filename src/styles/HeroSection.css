@@ -1,8 +1,6 @@
 .hero-section {
-  background-color: #20232a;
+  background-color: #111827;
   padding: 40px 0;
-  display: flex;
-  justify-content: center;
 }
 
 .hero-content {
@@ -16,10 +14,9 @@
 }
 
 .hero-image {
-  justify-self: end;
   border-radius: 8px;
-  width: 300px;
-  height: auto;
+  width: 456px;
+  height: 400px;
 }
 
 .hero-text {
