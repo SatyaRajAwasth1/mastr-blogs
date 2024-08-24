@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Editor } from '@tinymce/tinymce-react';
 import { TextField, Button, Typography, Paper, Grid } from '@mui/material';
-import '../styles/BlogWriter.css';
+import '../../styles/BlogWriter.css';
 
 function BlogWriter() {
   const [content, setContent] = useState('');
