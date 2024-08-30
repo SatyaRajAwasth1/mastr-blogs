@@ -2,51 +2,118 @@ import React, { useState } from 'react';
 import '../../styles/AdminPanel/AddPost.css';
 import { Editor } from '@tinymce/tinymce-react';
 import PreviewModal from './PreviewModal';
+import { GrView } from "react-icons/gr";
+import { RiArrowDropDownLine } from "react-icons/ri";
 
 function AddPost() {
   const [title, setTitle] = useState('');
   const [author, setAuthor] = useState('');
   const [postDate, setPostDate] = useState('');
+  const [postTime, setPostTime] = useState('');
   const [category, setCategory] = useState('');
   const [tags, setTags] = useState('');
-  const [featured, setFeatured] = useState(false);
-  const [content, setContent] = useState('');
+  const [publishedGlobally, setPublishedGlobally] = useState(false);
+  const [publishedInEnglish, setPublishedInEnglish] = useState(false);
+  const [contentBlocks, setContentBlocks] = useState([{ type: 'text', content: '' }]);
   const [previewVisible, setPreviewVisible] = useState(false);
+  const [showSaveOptions, setShowSaveOptions] = useState(false);
 
-  const handleEditorChange = (content, editor) => {
-    setContent(content);
+  const handleEditorChange = (content, index) => {
+    const updatedBlocks = [...contentBlocks];
+    updatedBlocks[index].content = content;
+    setContentBlocks(updatedBlocks);
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Handle form submission (e.g., save post)
-    console.log({
-      title,
-      author,
-      postDate,
-      category,
-      tags,
-      featured,
-      content,
-    });
+  const handleAddBlock = () => {
+    setContentBlocks([...contentBlocks, { type: 'text', content: '' }]);
+  };
+
+  const handleRemoveBlock = (index) => {
+    const updatedBlocks = contentBlocks.filter((_, i) => i !== index);
+    setContentBlocks(updatedBlocks);
+  };
+
+  const handleSaveOption = (option) => {
+    // Handle save draft or schedule post based on the selected option
+    console.log(`Save as ${option}`);
+    setShowSaveOptions(false);
   };
 
   return (
     <div className="add-post-container">
-      <h2>Add New Post</h2>
-      <form onSubmit={handleSubmit}>
-        <div className="form-left">
-          <div className="form-group">
-            <label htmlFor="title">Title</label>
-            <input
-              type="text"
-              id="title"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              placeholder="Enter post title"
-              required
-            />
+      <div className="top-bar">
+        <input
+          type="text"
+          className="post-title-input"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          placeholder="Enter post title"
+          required
+        />
+        <div className="right-actions">
+          <button type="button" className="preview-btn" onClick={() => setPreviewVisible(true)}>
+            <GrView /> Preview
+          </button>
+          <div className="save-btn-container">
+            <button
+              type="button"
+              className="save-btn"
+              onClick={() => setShowSaveOptions(!showSaveOptions)}
+            >
+            Save <RiArrowDropDownLine /> 
+            </button>
+            {showSaveOptions && (
+              <div className="save-options">
+                <button type="button" onClick={() => handleSaveOption('Draft')}>
+                  Save Draft
+                </button>
+                <button type="button" onClick={() => handleSaveOption('Schedule')}>
+                  Schedule Post
+                </button>
+              </div>
+            )}
           </div>
+        </div>
+      </div>
+      <form className="post-form">
+        <div className="form-left">
+          {contentBlocks.map((block, index) => (
+            <div className="block-container" key={index}>
+              <div className="block-header">
+                <h3>Block {index + 1}</h3>
+                <div className="block-controls">
+                  <button type="button" onClick={() => handleRemoveBlock(index)}>
+                    Remove
+                  </button>
+                </div>
+              </div>
+              <div className="block-content">
+                <Editor
+                  apiKey="..."
+                  value={block.content}
+                  init={{
+                    height: 200,
+                    menubar: false,
+                    plugins: [
+                      'advlist autolink lists link image charmap preview anchor',
+                      'searchreplace visualblocks code fullscreen',
+                      'insertdatetime media table help wordcount',
+                    ],
+                    toolbar:
+                      'undo redo | formatselect | bold italic | \
+                      alignleft aligncenter alignright alignjustify | \
+                      bullist numlist outdent indent | removeformat | help',
+                  }}
+                  onEditorChange={(content) => handleEditorChange(content, index)}
+                />
+              </div>
+            </div>
+          ))}
+          <button type="button" className="add-block-btn" onClick={handleAddBlock}>
+            Add Block
+          </button>
+        </div>
+        <div className="form-right">
           <div className="form-group">
             <label htmlFor="author">Author</label>
             <input
@@ -59,12 +126,20 @@ function AddPost() {
             />
           </div>
           <div className="form-group">
-            <label htmlFor="postDate">Post Date & Time</label>
+            <label htmlFor="postDate">Post Date</label>
             <input
-              type="datetime-local"
+              type="date"
               id="postDate"
               value={postDate}
               onChange={(e) => setPostDate(e.target.value)}
+              required
+            />
+            <label htmlFor="postTime">Post Time</label>
+            <input
+              type="time"
+              id="postTime"
+              value={postTime}
+              onChange={(e) => setPostTime(e.target.value)}
               required
             />
           </div>
@@ -75,7 +150,7 @@ function AddPost() {
               id="category"
               value={category}
               onChange={(e) => setCategory(e.target.value)}
-              placeholder="Enter category"
+              placeholder="Enter categories (comma-separated)"
               required
             />
           </div>
@@ -86,52 +161,20 @@ function AddPost() {
               id="tags"
               value={tags}
               onChange={(e) => setTags(e.target.value)}
-              placeholder="Enter tags, separated by commas"
+              placeholder="Enter tags (comma-separated)"
             />
           </div>
-          <div className="form-group toggle-group">
-            <label htmlFor="featured">Feature on Homepage</label>
+          <div className="form-group">
+            <label>Featured </label>
             <label className="switch">
               <input
                 type="checkbox"
-                id="featured"
-                checked={featured}
-                onChange={(e) => setFeatured(e.target.checked)}
+                checked={publishedGlobally}
+                onChange={(e) => setPublishedGlobally(e.target.checked)}
               />
               <span className="slider round"></span>
             </label>
           </div>
-        </div>
-        <div className="form-right">
-          <div className="editor-container">
-            <Editor
-              apiKey="..."
-              value={content}
-              init={{
-                height: 400,
-                menubar: false,
-                plugins: [
-                  'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
-                  'anchor', 'searchreplace', 'visualblocks', 'fullscreen', 'code',
-                  'insertdatetime', 'media', 'table', 'help', 'wordcount', 'codesample',
-                  'emoticons', 'quickbars', 'accordion', 'charactermap'
-                ],
-                toolbar: 'undo redo | blocks | bold italic forecolor | alignleft aligncenter alignright alignjustify | '+
-                ' bullist numlist outdent indent | image link removeformat emoticons codesample | fullscreen  | ' +
-                   'preview searchreplace accordion | insertdatetime charmap | code help',
-                content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
-              }}
-              onEditorChange={handleEditorChange}
-            />
-          </div>
-        </div>
-        <div className="form-actions">
-          <button type="button" className="preview-btn" onClick={() => setPreviewVisible(true)}>
-            Preview
-          </button>
-          <button type="submit" className="save-btn">
-            Save
-          </button>
         </div>
       </form>
       {previewVisible && (
@@ -139,10 +182,12 @@ function AddPost() {
           title={title}
           author={author}
           postDate={postDate}
+          postTime={postTime}
           category={category}
           tags={tags}
-          featured={featured}
-          content={content}
+          publishedGlobally={publishedGlobally}
+          publishedInEnglish={publishedInEnglish}
+          contentBlocks={contentBlocks}
           onClose={() => setPreviewVisible(false)}
         />
       )}
