@@ -1,8 +1,7 @@
-// src/components/AdminPanel/Topbar.js
 import React from 'react';
 import '../../styles/AdminPanel/Topbar.css';
-import { FaBell } from 'react-icons/fa';
-import profileImage from '../../assets/images/hero.jpg'
+import { IoNotificationsOutline } from "react-icons/io5";
+import profileImage from '../../assets/images/hero.jpg';
 
 function Topbar() {
   return (
@@ -11,7 +10,7 @@ function Topbar() {
         <input type="text" placeholder="Search..." />
       </div>
       <div className="topbar-right">
-        <FaBell className="icon" />
+        <IoNotificationsOutline className="icon" />
         <div className="profile-menu">
           <img src={profileImage} alt="Profile" className="profile-pic" />
           <div className="dropdown">
