@@ -64,6 +64,8 @@
 }
 
 .sidebar-nav .icon {
+  font-size: 24px;
+  transform: scaleY(1.1) scaleX(1);
   margin-right: 10px;
 }
 
@@ -87,5 +89,6 @@
 }
 
 .sidebar-settings .icon {
+  font-size: 24px;
   margin-right: 10px;
 }
